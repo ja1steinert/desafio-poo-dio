@@ -7,16 +7,17 @@ public class Dev {
     private Set<Conteudo> conteudosInscritos = new LinkedHashSet<>();
     private Set<Conteudo> conteudosConcluidos = new LinkedHashSet<>();
 
-    public void inscreverBootcamp(Bootcamp bootcamp){
+    public void inscreverBootcamp(Bootcamp bootcamp) {
         this.conteudosInscritos.addAll(bootcamp.getConteudos());
         bootcamp.getDevsInscritos().add(this);
     }
 
     public void progredir() {
         Optional<Conteudo> conteudo = this.conteudosInscritos.stream().findFirst();
-        if(conteudo.isPresent()) {
+        if (conteudo.isPresent()) {
             this.conteudosConcluidos.add(conteudo.get());
             this.conteudosInscritos.remove(conteudo.get());
+            System.out.println("Você concluiu o conteúdo: " + conteudo.get().getTitulo()); // Mensagem ao concluir um conteúdo
         } else {
             System.err.println("Você não está matriculado em nenhum conteúdo!");
         }
@@ -25,7 +26,7 @@ public class Dev {
     public double calcularTotalXp() {
         Iterator<Conteudo> iterator = this.conteudosConcluidos.iterator();
         double soma = 0;
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             double next = iterator.next().calcularXp();
             soma += next;
         }
@@ -36,7 +37,6 @@ public class Dev {
                 .mapToDouble(Conteudo::calcularXp)
                 .sum();*/
     }
-
 
     public String getNome() {
         return nome;
@@ -60,6 +60,16 @@ public class Dev {
 
     public void setConteudosConcluidos(Set<Conteudo> conteudosConcluidos) {
         this.conteudosConcluidos = conteudosConcluidos;
+    }
+
+    public void emitirCertificado() {
+        if (conteudosConcluidos.isEmpty()) {
+            System.out.println("Nenhum conteúdo concluído ainda.");
+        } else {
+            for (Conteudo conteudo : conteudosConcluidos) {
+                System.out.println("A instituição de ensino declara que " + this.nome + " concluiu o Conteúdo " + conteudo.getTitulo() + ".");
+            }
+        }
     }
 
     @Override
